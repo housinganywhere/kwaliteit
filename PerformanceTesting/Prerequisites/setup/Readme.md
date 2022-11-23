@@ -1,4 +1,4 @@
-# What all things can will it setup for me?
+# What all things can it setup for me?
 
 Currently this setup can create following data :-
 
@@ -28,7 +28,7 @@ The other dataCategories available are :-
 If not specified, by default it executes against staging environment
 * -exportLocation :- Indicates at which location the json file of data needs to be stored. One can provide a relative path in here. In the above example `../../../Data/Jsons/Users.json` indicates the data needs to be stored inside /Data/Jsons/Users.json located at the root level of the PerformanceTesting folder
 
-# Shape of the sample json files which gets created
+# Shape of the sample json data files created
 
 **Users.json**
 ```
