@@ -1,0 +1,82 @@
+{
+  "address": "Bavariaring, Munich",
+  "street": "bavariaring",
+  "currency": "EUR",
+  "kind": 0,
+  "price": 100000,
+  "contractType": "monthly",
+  "type": 3,
+  "description": "Fully furnished 2 room apartment on the ground floor with a small garden, bathroom, kitchen, living room and separate bedroom in the center of Amsterdam. The space: The space is located in the center of Amsterdam at less than 1 minute from the Jordaan. Access for guests: Spacious appartment with fridge / washing machine / dishwasher / kitchen (oven included) / shower / TV / sound system. Interaction with guests: We give you the space to enjoy your stay in Amsterdam. We are, however, always available for questions by text message or by calling",
+  "freePlaces": 2,
+  "minimumStayMonths": 5,
+  "costs": {
+    "water-bill": {
+      "value": 0,
+      "payableBy": "included-in-rent",
+      "payableAt": "monthly",
+      "required": true,
+      "refundable": false,
+      "isEstimated": false
+    },
+    "gas-bill": {
+      "value": 0,
+      "payableBy": "included-in-rent",
+      "payableAt": "bi-weekly",
+      "required": true,
+      "refundable": false,
+      "isEstimated": false
+    },
+    "electricity-bill": {
+      "value": 777,
+      "payableBy": "tenant",
+      "payableAt": "weekly",
+      "required": true,
+      "refundable": false,
+      "isEstimated": true
+    },
+    "cleaning-service": {
+      "value": 0,
+      "payableBy": "included-in-rent",
+      "payableAt": "bi-weekly",
+      "required": false,
+      "refundable": false,
+      "isEstimated": false
+    }
+  },
+  "facilities": {
+    "ac": "no",
+    "allergy_friendly": "yes",
+    "animal_allowed": "discussable",
+    "balcony_terrace": "private",
+    "basement": "private",
+    "bathroom": "private",
+    "bed": "yes",
+    "bedroom_count": "2",
+    "bedroom_furnished": "yes",
+    "bedroom_size": null,
+    "closet": "yes",
+    "desk": "yes",
+    "dishwasher": "yes",
+    "dryer": "no",
+    "flooring": "laminate",
+    "garden": "private",
+    "heating": "central",
+    "housemates_gender": null,
+    "kitchen": "private",
+    "kitchenware": "private",
+    "living_room": "private",
+    "lock": "no",
+    "lroom_furniture": "yes",
+    "parking": "private",
+    "play_music": "discussable",
+    "registration_possible": "yes",
+    "smoking_allowed": "outside_only",
+    "tenant_status": "any",
+    "toilet": "private",
+    "total_size": "85",
+    "tv": "yes",
+    "washing_machine": "yes",
+    "wheelchair_accessible": "yes",
+    "wifi": "yes"
+  }
+}
