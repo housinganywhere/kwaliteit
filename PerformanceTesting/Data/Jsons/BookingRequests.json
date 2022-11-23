@@ -1,22 +1,46 @@
 {
- "Users": [
+ "BookingRequests": [
   {
-   "Username": "ldymabd@vjxfmqp.biz",
-   "Password": "aGXlkpqyMOVbXbhgAZDaGROjWBUofHHFxsWgOIWRtmLuNLWPMU",
-   "Id": 711552,
-   "Uuid": "85616e25-5a3b-4df0-b90a-2651951c885b"
+   "LandlordUsername": "xvgftlp@oongbbl.info",
+   "LandlordPassword": "EguuSYRDqPYKluGxqvtWnpelSgmCMVQYMkFNQwDKQFoKfPWCZY",
+   "LandlordId": "711555",
+   "LandlordUuid": "3b814c5f-3f40-44a1-9cf8-f6066b687c58",
+   "TenantId": "711558",
+   "TenantUuid": "fda2dea2-41f2-43cd-88c5-905c1998440e",
+   "TenantUsername": "mmsuiqh@futfffq.net",
+   "BookingId": "920614",
+   "ListingId": "2323505",
+   "ListingUuid": "3b814c5f-3f40-44a1-9cf8-f6066b687c58",
+   "StartDate": "2022-12-23",
+   "EndDate": "2023-05-23"
   },
   {
-   "Username": "efhqrmd@gshdkks.com",
-   "Password": "BklhrNsulXjJZRvbiQpHJFAIFDUyFpVnrXFjABvMpgJVDwDSmo",
-   "Id": 711553,
-   "Uuid": "f7285052-f404-4dde-9153-283533eb4c94"
+   "LandlordUsername": "eawiuza@eyxqsqp.com",
+   "LandlordPassword": "oIMWvZyATDooWZMDfpWAXQaextBILcAlKcInCfrdWlxmeiNeYW",
+   "LandlordId": "711556",
+   "LandlordUuid": "13d669b9-d823-4fae-b1e9-edb1897c7abb",
+   "TenantId": "711558",
+   "TenantUuid": "fda2dea2-41f2-43cd-88c5-905c1998440e",
+   "TenantUsername": "mmsuiqh@futfffq.net",
+   "BookingId": "920615",
+   "ListingId": "2323506",
+   "ListingUuid": "13d669b9-d823-4fae-b1e9-edb1897c7abb",
+   "StartDate": "2022-12-23",
+   "EndDate": "2023-05-23"
   },
   {
-   "Username": "rpvhxvv@xoaeifw.info",
-   "Password": "MIsodfvcgGynHiYEbwQdXOCBWfOIIKWNoNstgmhXJqoNCCnscn",
-   "Id": 711554,
-   "Uuid": "68a99899-156b-428a-b6d8-bd02b3ef6d05"
+   "LandlordUsername": "dppnsvg@ixdaawj.biz",
+   "LandlordPassword": "XalTskmfwjJiIVPSKpFadCKQBEujVUGKUpkjftlCtjYlheHvde",
+   "LandlordId": "711557",
+   "LandlordUuid": "b76ce669-e6cd-4f30-aa12-650b56a6ae45",
+   "TenantId": "711558",
+   "TenantUuid": "fda2dea2-41f2-43cd-88c5-905c1998440e",
+   "TenantUsername": "mmsuiqh@futfffq.net",
+   "BookingId": "920616",
+   "ListingId": "2323507",
+   "ListingUuid": "b76ce669-e6cd-4f30-aa12-650b56a6ae45",
+   "StartDate": "2022-12-23",
+   "EndDate": "2023-05-23"
   }
  ]
 }
