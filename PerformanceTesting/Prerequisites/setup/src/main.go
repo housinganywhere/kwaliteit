@@ -221,7 +221,7 @@ func doExportBookingRequests(bookingRequests []exportBookingRequest) {
 }
 
 func main() {
-	dataCategory := flag.String("dataCategory", "user", "category of data to be created")
+	dataCategory := flag.String("dataCategory", DC_USER, "category of data to be created")
 	noOfItems := flag.Int("count", 5, "number of records of data to be created")
 	hostName := flag.String("host", "https://stage.housinganywhere.com", "host against which the data needs to be created")
 	exportfile := flag.String("exportLocation", "./testdata.json", "location at which the generated test data is exported")
@@ -229,12 +229,13 @@ func main() {
 	flag.Parse()
 	exportLocation = *exportfile
 	host = *hostName
-	if *dataCategory == "user" {
+
+	switch *dataCategory {
+	case DC_USER:
 		generateUsers(*noOfItems)
-	} else if *dataCategory == "listing" {
+	case DC_LISTING:
 		generateListings(*noOfItems)
-	} else {
+	case DC_BOOKING_REQUESTS:
 		generateListingsWithBookingRequest(*noOfItems)
 	}
-
 }
