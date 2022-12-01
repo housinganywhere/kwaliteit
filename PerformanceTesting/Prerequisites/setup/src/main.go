@@ -136,7 +136,7 @@ func createMultipleListings(count int) []exportListing {
 
 	json.Unmarshal(streetsDataBytesValue, &streetList)
 
-	listingsToExport := make([]exportListing, 1000)
+	listingsToExport := make([]exportListing, count+1)
 
 	jar, err := cookiejar.New(nil)
 	if err != nil {
