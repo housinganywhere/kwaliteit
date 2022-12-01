@@ -11,7 +11,10 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 )
+
+const MAX_CONCURRENCY = 50
 
 // will be replaced by whatever values are passed from commandline
 var host = "https://localhost:8080"
@@ -65,7 +68,11 @@ func exportUsersList(userDetails []exportUser) {
 	}
 
 	file, _ := json.MarshalIndent(usersList, "", " ")
-	_ = ioutil.WriteFile(exportLocation, file, 0644)
+	err := ioutil.WriteFile(exportLocation+"/Users_test.json", file, 0644)
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 // creates landlords and exports to json
@@ -104,6 +111,12 @@ func generateListings(count int) {
 
 // creates listings and exports to json
 func createMultipleListings(count int) []exportListing {
+	maxConcurrency := MAX_CONCURRENCY
+
+	if count < maxConcurrency {
+		maxConcurrency = count - 1
+	}
+
 	listingDetailsJson, err := os.Open("../data/ListingDetails.json")
 	if err != nil {
 		fmt.Println(err)
@@ -112,49 +125,69 @@ func createMultipleListings(count int) []exportListing {
 
 	listingDetailsInBytes, _ := ioutil.ReadAll(listingDetailsJson)
 
-	var listingDetailsMap map[string]interface{}
-	json.Unmarshal([]byte(listingDetailsInBytes), &listingDetailsMap)
-
 	streetsDataJson, err := os.Open("../data/Streets.json")
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	defer streetsDataJson.Close()
 	streetsDataBytesValue, _ := ioutil.ReadAll(streetsDataJson)
 	var streetList streets
 
 	json.Unmarshal(streetsDataBytesValue, &streetList)
 
-	var listingsToExport []exportListing
+	listingsToExport := make([]exportListing, 1000)
+
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		log.Fatalf("Got error while creating cookie jar %s", err.Error())
+	}
+	client := http.Client{
+		Jar: jar,
+	}
+
+	landlordDetails := registerUser(&client)
+	verifyUser(landlordDetails.Uuid, strings.Split(fmt.Sprintf("%f", landlordDetails.Id), ".")[0], &client)
+
+	var wg sync.WaitGroup
 
 	for i := 0; i < count; i++ {
-		jar, err := cookiejar.New(nil)
-		if err != nil {
-			log.Fatalf("Got error while creating cookie jar %s", err.Error())
+
+		wg.Add(1)
+
+		go func(idx int, listingToExport []exportListing) {
+			fmt.Println(idx)
+			defer wg.Done()
+
+			var listingDetailsMap map[string]interface{}
+			noOfStreets := len(streetList.Streets)
+			selectedStreet := idx % noOfStreets
+
+			json.Unmarshal([]byte(listingDetailsInBytes), &listingDetailsMap)
+			listingDetailsMap["address"] = streetList.Streets[selectedStreet].Name + ", " + streetList.Streets[selectedStreet].City
+			listingDetailsMap["street"] = streetList.Streets[selectedStreet].Name
+			listingDetailsBytesArray, _ := json.Marshal(listingDetailsMap)
+
+			listingDetails, err := createListing(&client, listingDetailsBytesArray)
+
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			listing := exportListing{
+				Id:                 listingDetails["listingId"],
+				Uuid:               listingDetails["listingUuid"],
+				AdvertiserId:       listingDetails["advertiserId"],
+				AdvertiserEmail:    landlordDetails.Username,
+				AdvertiserPassword: landlordDetails.Password,
+			}
+
+			listingsToExport[i] = listing
+		}(i, listingsToExport)
+
+		if i%maxConcurrency == 0 && i != 0 {
+			wg.Wait()
 		}
-		client := http.Client{
-			Jar: jar,
-		}
-
-		landlordDetails := registerUser(&client)
-		verifyUser(landlordDetails.Uuid, strings.Split(fmt.Sprintf("%f", landlordDetails.Id), ".")[0], &client)
-
-		listingDetailsMap["address"] = streetList.Streets[i].Name + ", " + streetList.Streets[i].City
-		listingDetailsMap["street"] = streetList.Streets[i].Name
-		listingDetailsBytesArray, _ := json.Marshal(listingDetailsMap)
-
-		listingDetails := createListing(&client, listingDetailsBytesArray)
-
-		listing := exportListing{
-			Id:                 listingDetails["listingId"],
-			Uuid:               listingDetails["listingUuid"],
-			AdvertiserId:       listingDetails["advertiserId"],
-			AdvertiserEmail:    landlordDetails.Username,
-			AdvertiserPassword: landlordDetails.Password,
-		}
-
-		listingsToExport = append(listingsToExport, listing)
-
 	}
 	return listingsToExport
 }
@@ -166,7 +199,7 @@ func doExportListings(listingsToExport []exportListing) {
 	}
 	file, _ := json.MarshalIndent(listingsList, "", " ")
 	//_ = ioutil.WriteFile("listings.json", file, 0644)
-	_ = ioutil.WriteFile(exportLocation, file, 0644)
+	_ = ioutil.WriteFile(exportLocation+"/Listings_test.json", file, 0644)
 }
 
 func generateListingsWithBookingRequest(count int) {

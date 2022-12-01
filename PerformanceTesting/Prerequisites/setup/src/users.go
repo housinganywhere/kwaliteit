@@ -54,6 +54,8 @@ func registerUser(client *http.Client) *exportUser {
 		Id:       res["id"].(float64),
 		Uuid:     res["uuid"].(string),
 	}
+	// user is not exportd after creation in listings so added it here
+	// exportUsersList([]exportUser{p})
 	return &p
 }
 
@@ -119,7 +121,7 @@ func verifyUser(guid string, id string, client *http.Client) {
 		log.Fatal(err)
 	}
 	if resp2.StatusCode != 204 {
-		log.Fatal("/user/<userid>/request-code request returned error")
+		log.Fatal("/user/<userid>/request-code request returned error", err, resp2.StatusCode)
 	}
 	var res2 map[string]interface{}
 	json.NewDecoder(resp2.Body).Decode(&res2)
