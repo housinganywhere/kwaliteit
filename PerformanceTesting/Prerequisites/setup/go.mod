@@ -1,4 +1,4 @@
-module github.com/housinganywhere/qa/performance-tests/setup
+module github.com/housinganywhere/kwaliteit/performance-testing/setup
 
 go 1.19
 
