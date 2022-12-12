@@ -1,14 +1,16 @@
 package utilities
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"log"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
 // exports users into json file
 func ExportData(jsonPayload any, location string) {
-	file, err := json.MarshalIndent(jsonPayload, "", " ")
+	//file, err := json.MarshalIndent(jsonPayload, "", " ")
+	file, err := jsoniter.MarshalIndent(jsonPayload, "", " ")
 	if err != nil {
 		log.Fatal("error occured while indenting json data for exporting. The error is :- " + err.Error())
 	}

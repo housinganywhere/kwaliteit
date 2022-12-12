@@ -37,7 +37,7 @@ func main() {
 	}
 	switch dataCategory {
 	case datSeeder.Config.DataCategoryUser:
-		users.GenerateUsers(&datSeeder, noOfItems)
+		users.GenerateUsers(noOfItems, hostName, exportFile)
 	case datSeeder.Config.DataCategoryListing:
 		listings.CreateAndExportListings(&datSeeder, noOfItems)
 	case datSeeder.Config.DataCategoryBookingRequest:

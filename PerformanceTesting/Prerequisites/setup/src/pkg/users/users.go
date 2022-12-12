@@ -7,34 +7,51 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"strings"
+	"sync"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/housinganywhere/kwaliteit/performance-testing/setup/src/pkg/utilities"
 )
 
 // creates landlords and exports to json
-func GenerateUsers(client *utilities.DataSeeder, count int) {
-	var userDetails []exportUser
+func GenerateUsers(count int, hostName string, exportFile string) {
+	userDetails := make([]*exportUser, count)
 
-	for i := 0; i < count; i++ {
-		jar, err := cookiejar.New(nil)
-		if err != nil {
-			log.Fatalf("Got error while creating cookie jar %s", err.Error())
+	//go-routine batches -- each batch of 50
+	batchCount := (count / 50) + 1
+
+	for j := 0; j < batchCount; j++ {
+		var it int
+		var wg sync.WaitGroup
+		if j == (batchCount - 1) {
+			it = count % 50
+		} else {
+			it = 50
 		}
-		client.HttpClient.Jar = jar
-		landlordDetails := RegisterUser(client)
-		VerifyUser(client, landlordDetails.Uuid, strings.Split(fmt.Sprintf("%f", landlordDetails.Id), ".")[0])
-
-		user := exportUser{
-			Username: landlordDetails.Username,
-			Password: landlordDetails.Password,
-			Id:       landlordDetails.Id,
-			Uuid:     landlordDetails.Uuid,
+		wg.Add(it)
+		for i := 0; i < it; i++ {
+			go func(i int) {
+				defer wg.Done()
+				client := utilities.NewDataSeeder(hostName, exportFile)
+				jar, err := cookiejar.New(nil)
+				if err != nil {
+					log.Fatalf("Got error while creating cookie jar %s", err.Error())
+				}
+				client.HttpClient.Jar = jar
+				landlordDetails := RegisterUser(&client)
+				VerifyUser(&client, landlordDetails.Uuid, strings.Split(fmt.Sprintf("%f", landlordDetails.Id), ".")[0])
+				user := exportUser{
+					Username: landlordDetails.Username,
+					Password: landlordDetails.Password,
+					Id:       landlordDetails.Id,
+					Uuid:     landlordDetails.Uuid,
+				}
+				userDetails[i+(50*j)] = &user
+			}(i)
 		}
-
-		userDetails = append(userDetails, user)
+		wg.Wait()
 	}
-	utilities.ExportData(userDetails, client.ExportLocation)
+	utilities.ExportData(userDetails, exportFile)
 }
 
 // registers a new user and returns export user object
