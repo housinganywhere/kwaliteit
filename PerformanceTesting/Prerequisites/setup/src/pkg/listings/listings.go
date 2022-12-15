@@ -5,24 +5,27 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/http/cookiejar"
 	"os"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/housinganywhere/kwaliteit/performance-testing/setup/src/pkg/users"
 	"github.com/housinganywhere/kwaliteit/performance-testing/setup/src/pkg/utilities"
 )
 
-func CreateAndExportListings(client *utilities.DataSeeder, count int) {
-	listingsToExport := GenerateListingsWithUniqueLL(client, count)
+func CreateAndExportListings(count int, hostName string, exportFile string) {
+	listingsToExport := GenerateListingsWithUniqueLL(count, hostName, exportFile)
 	utilities.ExportData(exportListings{
 		Listings: listingsToExport,
 	},
-		client.ExportLocation)
+		exportFile)
 }
 
-func GenerateListingsWithUniqueLL(client *utilities.DataSeeder, count int) []exportListing {
+func GenerateListingsWithUniqueLL(count int, hostName string, exportFile string) []*exportListing {
 	listingDetailsJson, err := os.Open("../data/listingDetails.json")
 	if err != nil {
 		log.Fatal("error occurred file opening the listing details json file:- " + err.Error())
@@ -50,34 +53,52 @@ func GenerateListingsWithUniqueLL(client *utilities.DataSeeder, count int) []exp
 
 	var streetList streets
 	json.Unmarshal(streetsDataBytesValue, &streetList)
+	streetCount := len(streetList.Streets)
+	listingsToExport := make([]*exportListing, count)
 
-	var listingsToExport []exportListing
+	//go-routine batches -- each batch of 50
+	batchCount := (count / 50) + 1
 
-	for i := 0; i < count; i++ {
-		jar, err := cookiejar.New(nil)
-		if err != nil {
-			log.Fatalf("Got error while creating cookie jar %s", err.Error())
+	for j := 0; j < batchCount; j++ {
+		var it int
+		var wg sync.WaitGroup
+		if j == (batchCount - 1) {
+			it = count % 50
+		} else {
+			it = 50
 		}
-		client.HttpClient.Jar = jar
-		user := users.RegisterUser(client)
-		users.VerifyUser(client, user.Uuid, strings.Split(fmt.Sprintf("%f", user.Id), ".")[0])
+		wg.Add(it)
+		for i := 0; i < it; i++ {
+			go func(i int) {
+				defer wg.Done()
+				client := utilities.NewDataSeeder(hostName, exportFile)
+				jar, err := cookiejar.New(nil)
+				if err != nil {
+					log.Fatalf("Got error while creating cookie jar %s", err.Error())
+				}
+				client.HttpClient.Jar = jar
+				user := users.RegisterUser(&client)
+				users.VerifyUser(&client, user.Uuid, strings.Split(fmt.Sprintf("%f", user.Id), ".")[0])
+				rand.Seed(time.Now().UnixNano())
+				streetIndex := rand.Intn(streetCount)
+				listingDetailsMap["address"] = streetList.Streets[streetIndex].Name + ", " + streetList.Streets[i].City
+				listingDetailsMap["street"] = streetList.Streets[streetIndex].Name
+				if err != nil {
+					log.Fatalf("Error occurred while marshaling listingDetailsMap into Json:- %s", err.Error())
+				}
 
-		listingDetailsMap["address"] = streetList.Streets[i].Name + ", " + streetList.Streets[i].City
-		listingDetailsMap["street"] = streetList.Streets[i].Name
-		if err != nil {
-			log.Fatalf("Error occurred while marshaling listingDetailsMap into Json:- %s", err.Error())
+				listing := CreateListing(&client, listingDetailsMap)
+
+				listingsToExport[i+(50*j)] = &exportListing{
+					Id:                 listing["listingId"],
+					Uuid:               listing["listingUuid"],
+					AdvertiserId:       listing["advertiserId"],
+					AdvertiserEmail:    user.Username,
+					AdvertiserPassword: user.Password,
+				}
+			}(i)
 		}
-
-		listing := CreateListing(client, listingDetailsMap)
-
-		listingsToExport = append(listingsToExport, exportListing{
-			Id:                 listing["listingId"],
-			Uuid:               listing["listingUuid"],
-			AdvertiserId:       listing["advertiserId"],
-			AdvertiserEmail:    user.Username,
-			AdvertiserPassword: user.Password,
-		})
-
+		wg.Wait()
 	}
 	return listingsToExport
 }

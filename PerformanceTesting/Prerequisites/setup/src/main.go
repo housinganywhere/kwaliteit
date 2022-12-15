@@ -39,8 +39,8 @@ func main() {
 	case datSeeder.Config.DataCategoryUser:
 		users.GenerateUsers(noOfItems, hostName, exportFile)
 	case datSeeder.Config.DataCategoryListing:
-		listings.CreateAndExportListings(&datSeeder, noOfItems)
+		listings.CreateAndExportListings(noOfItems, hostName, exportFile)
 	case datSeeder.Config.DataCategoryBookingRequest:
-		bookings.GenerateListingsWithBookingRequest(&datSeeder, noOfItems)
+		bookings.GenerateListingsWithBookingRequest(noOfItems, hostName, exportFile)
 	}
 }

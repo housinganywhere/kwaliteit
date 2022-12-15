@@ -12,6 +12,7 @@ type exportBookingRequest struct {
 	TenantId         string
 	TenantUuid       string
 	TenantUsername   string
+	TenantPassword   string
 	BookingId        string
 	ListingId        string
 	ListingUuid      string

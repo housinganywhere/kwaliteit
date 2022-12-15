@@ -11,7 +11,7 @@ type street struct {
 }
 
 type exportListings struct {
-	Listings []exportListing
+	Listings []*exportListing
 }
 
 type exportListing struct {

@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/housinganywhere/kwaliteit/performance-testing/setup/src/pkg/listings"
@@ -15,42 +16,60 @@ import (
 	"github.com/housinganywhere/kwaliteit/performance-testing/setup/src/pkg/utilities"
 )
 
-func GenerateListingsWithBookingRequest(client *utilities.DataSeeder, count int) {
-	var bookingRequests []exportBookingRequest
-	listingsList := listings.GenerateListingsWithUniqueLL(client, count)
+func GenerateListingsWithBookingRequest(count int, hostName string, exportFile string) {
+	listingsList := listings.GenerateListingsWithUniqueLL(count, hostName, exportFile)
 
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		log.Fatalf("Got error while creating cookie jar %s", err.Error())
-	}
-	client.HttpClient.Jar = jar
+	bookingRequests := make([]exportBookingRequest, count)
 
-	userDetails := users.RegisterUser(client)
-	doSubscription(client, int(userDetails.Id), "firstName lastName")
+	//go-routine batches -- each batch of 50
+	batchCount := (count / 50) + 1
 
-	for i := 0; i < count; i++ {
-		listingId, _ := strconv.Atoi(listingsList[i].Id)
-		bookingDetails := sendBookingRequest(client, listingId, int(userDetails.Id))
-		bookingRequest := exportBookingRequest{
-			LandlordUsername: listingsList[i].AdvertiserEmail,
-			LandlordPassword: listingsList[i].AdvertiserPassword,
-			LandlordId:       listingsList[i].AdvertiserId,
-			LandlordUuid:     listingsList[i].Uuid,
-			TenantId:         strings.Split(fmt.Sprintf("%f", userDetails.Id), ".")[0],
-			TenantUuid:       userDetails.Uuid,
-			TenantUsername:   userDetails.Username,
-			BookingId:        bookingDetails["bookingId"],
-			ListingId:        listingsList[i].Id,
-			ListingUuid:      listingsList[i].Uuid,
-			StartDate:        bookingDetails["startDate"],
-			EndDate:          bookingDetails["endDate"],
+	for j := 0; j < batchCount; j++ {
+		var it int
+		var wg sync.WaitGroup
+		if j == (batchCount - 1) {
+			it = count % 50
+		} else {
+			it = 50
 		}
-		bookingRequests = append(bookingRequests, bookingRequest)
-	}
+		wg.Add(it)
+		for i := 0; i < it; i++ {
+			listingId, _ := strconv.Atoi(listingsList[i].Id)
+			go func(i int) {
+				defer wg.Done()
+				client := utilities.NewDataSeeder(hostName, exportFile)
+				jar, err := cookiejar.New(nil)
+				if err != nil {
+					log.Fatalf("Got error while creating cookie jar %s", err.Error())
+				}
+				client.HttpClient.Jar = jar
+				userDetails := users.RegisterUser(&client)
+				doSubscription(&client, int(userDetails.Id), "firstName lastName")
 
+				bookingDetails := sendBookingRequest(&client, listingId, int(userDetails.Id))
+				bookingRequest := exportBookingRequest{
+					LandlordUsername: listingsList[i].AdvertiserEmail,
+					LandlordPassword: listingsList[i].AdvertiserPassword,
+					LandlordId:       listingsList[i].AdvertiserId,
+					LandlordUuid:     listingsList[i].Uuid,
+					TenantId:         strings.Split(fmt.Sprintf("%f", userDetails.Id), ".")[0],
+					TenantUuid:       userDetails.Uuid,
+					TenantUsername:   userDetails.Username,
+					TenantPassword:   userDetails.Password,
+					BookingId:        bookingDetails["bookingId"],
+					ListingId:        listingsList[i].Id,
+					ListingUuid:      listingsList[i].Uuid,
+					StartDate:        bookingDetails["startDate"],
+					EndDate:          bookingDetails["endDate"],
+				}
+				bookingRequests[i+(50*j)] = bookingRequest
+			}(i)
+		}
+		wg.Wait()
+	}
 	utilities.ExportData(exportBookingRequests{
 		BookingRequests: bookingRequests,
-	}, client.ExportLocation)
+	}, exportFile)
 }
 
 func doSubscription(client *utilities.DataSeeder, tenantId int, tenantName string) {
