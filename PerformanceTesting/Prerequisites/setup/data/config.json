@@ -1,0 +1,13 @@
+{
+    "stripeTestCardNumber": "4111111111111111",
+    "stripeTestCardExpiryMonth": "03",
+    "stripeTestCardExpiryYear": "23",
+    "stripeTestCardCvc": "111",
+    "stripeTestKey": "pk_test_qH4b4EehCxTKC9SYtKHvPsPK",
+    "dataCategoryListing": "listing",
+    "dataCategoryUser": "user",
+    "dataCategoryBookingRequest": "bookingRequest",
+    "productionUrl": "https://housinganywhere.com",
+    "stripeApi": "https://api.stripe.com",
+    "stripeJs": "https://js.stripe.com"
+}

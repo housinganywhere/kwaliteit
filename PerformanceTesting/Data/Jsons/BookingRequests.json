@@ -1,0 +1,49 @@
+{
+ "BookingRequests": [
+  {
+   "LandlordUsername": "kbbptev@fnwchsg.com",
+   "LandlordPassword": "LJeEZOnHSVHupgxZFOJTrURqKZLPYicDFZXbnDSCXHFXmuAssI",
+   "LandlordId": "711849",
+   "LandlordUuid": "bab234e7-7dcf-4562-b41f-1e84c67b0948",
+   "TenantId": "711850",
+   "TenantUuid": "8171352f-8e5c-4f1f-a48d-aba1203c9c6c",
+   "TenantUsername": "xqvuevt@uelhbof.biz",
+   "TenantPassword": "wtHUanOkZoHNVsdqCpVTrVsobIqtlpesXCqoQtYePPVRYWGDGQ",
+   "BookingId": "920686",
+   "ListingId": "2377046",
+   "ListingUuid": "bab234e7-7dcf-4562-b41f-1e84c67b0948",
+   "StartDate": "2023-01-15",
+   "EndDate": "2023-06-15"
+  },
+  {
+   "LandlordUsername": "iffopht@wqixjmk.info",
+   "LandlordPassword": "tyWnTHfnhQPLFQBiJjhRCFJpAltBpwrsgJjCoeYGHPCoNBYZbt",
+   "LandlordId": "711847",
+   "LandlordUuid": "b6662303-b4fb-49c3-b423-470c65d6f7cf",
+   "TenantId": "711852",
+   "TenantUuid": "974be1ac-1d2d-4933-9f26-bbd7b4bf99f8",
+   "TenantUsername": "axisnab@tyxlsad.net",
+   "TenantPassword": "fMwfPinCdtIsfcoIuJOUgmlKIFeLMXbhltCTDALZKjCvdSBwgT",
+   "BookingId": "920688",
+   "ListingId": "2377047",
+   "ListingUuid": "b6662303-b4fb-49c3-b423-470c65d6f7cf",
+   "StartDate": "2023-01-15",
+   "EndDate": "2023-06-15"
+  },
+  {
+   "LandlordUsername": "fmpqxio@xbmpwck.org",
+   "LandlordPassword": "XaFKeUtQiyUJqsAhnrwtAMFwpqnwwxDXEpZdZWZfmksUSxuDNO",
+   "LandlordId": "711848",
+   "LandlordUuid": "5bfddd50-0614-43e9-9fd5-b0a2eb317cf7",
+   "TenantId": "711851",
+   "TenantUuid": "52149bff-1d34-4747-950a-5d7a6188628f",
+   "TenantUsername": "uaedwyn@clotcfr.org",
+   "TenantPassword": "oGoPPUGwMmEYhKxnTyiOIIWXifABiAVNVfnOccCWYVNEjLshKu",
+   "BookingId": "920687",
+   "ListingId": "2377048",
+   "ListingUuid": "5bfddd50-0614-43e9-9fd5-b0a2eb317cf7",
+   "StartDate": "2023-01-15",
+   "EndDate": "2023-06-15"
+  }
+ ]
+}
