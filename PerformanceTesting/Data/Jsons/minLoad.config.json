@@ -1,0 +1,12 @@
+{
+    "systemTags": ["proto", "status", "method", "url", "name", "group", "check", "error", "error_code", "scenario", "expected_response"],
+    "scenarios": {
+      "createListing": {
+        "exec": "createListinge2e",
+        "executor": "per-vu-iterations",
+        "vus": 1,
+        "iterations": 1,
+        "maxDuration": "5m"
+      }
+    }
+  }

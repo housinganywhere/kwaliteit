@@ -1,0 +1,56 @@
+{
+    "scenarios": {
+      "createListing": {
+        "exec": "createListinge2e",
+        "executor": "ramping-arrival-rate",
+        "startRate": 2,
+        "preAllocatedVUs": 1,
+        "timeUnit": "10m",
+        "stages": [
+                 { "duration": "10m", "target": 2 },
+                 { "duration": "10m", "target": 3 },
+                 { "duration": "10m", "target": 1 }
+                ],
+               "gracefulStop": "10m"
+      },
+      "searchListingsAndOpenLDP": {
+        "exec": "searchAndOpenLDPe2e",
+        "executor": "ramping-arrival-rate",
+        "startRate": 100,
+        "preAllocatedVUs": 1,
+        "timeUnit": "1m",
+        "stages": [
+                 { "duration": "10m", "target": 100 },
+                 { "duration": "10m", "target": 300 },
+                 { "duration": "10m", "target": 50 }
+                ],
+               "gracefulStop": "15m"
+      },
+      "searchListingsAndSendBookingRequest": {
+        "exec": "searchListingAndSendBookingRequest",
+        "executor": "ramping-arrival-rate",
+        "startRate": 1,
+        "preAllocatedVUs": 1,
+        "timeUnit": "10m",
+        "stages": [
+                 { "duration": "10m", "target": 1 },
+                 { "duration": "10m", "target": 2 },
+                 { "duration": "10m", "target": 1 }
+                ],
+               "gracefulStop": "15m"
+      },
+      "landlordSendsMessangeAndActsOnBookingRequest": {
+        "exec": "landlordSendsMessangeAndActsOnBookingRequest",
+        "executor": "ramping-arrival-rate",
+        "startRate": 1,
+        "preAllocatedVUs": 1,
+        "timeUnit": "10m",
+        "stages": [
+                 { "duration": "10m", "target": 1 },
+                 { "duration": "10m", "target": 2 },
+                 { "duration": "10m", "target": 1 }
+                ],
+               "gracefulStop": "15m"
+      }
+    }
+  }
