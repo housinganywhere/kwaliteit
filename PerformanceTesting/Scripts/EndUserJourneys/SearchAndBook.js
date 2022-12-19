@@ -9,7 +9,7 @@ import ApplicationFlow from "../Common/ApplicationFlow.js";
 import { randomString } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 
 const sharedListingIds = new SharedArray("publishedListings", function () {
-  return JSON.parse(open("../../Data/Jsons/listings.json")).Listings;
+  return JSON.parse(open("../TestData/listings.json")).Listings;
 });
 
 export function searchListingAndRequestBookingJourney() {

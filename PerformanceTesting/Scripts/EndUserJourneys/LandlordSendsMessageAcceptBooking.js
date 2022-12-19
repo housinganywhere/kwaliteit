@@ -8,7 +8,7 @@ import Utilities from "../Common/Utilities.js";
 
 const bookingDetails = new SharedArray("bookingDetails", function () {
   return JSON.parse(
-    open("../../Data/Jsons/BookingRequests.json")
+    open("../TestData/BookingRequests.json")
   ).BookingRequests;
 });
 

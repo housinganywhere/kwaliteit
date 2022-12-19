@@ -6,9 +6,9 @@ import ApplicationFlow from "../Common/ApplicationFlow.js";
 import * as constants from "../Common/Constants.js";
 import Utilities from "../Common/Utilities.js";
 
-const binaryFile = open("../../Data/Images/room.png", "b");
+const binaryFile = open("../TestData/room.png", "b");
 const users = new SharedArray("userCredentials", function () {
-  return JSON.parse(open("../../Data/Jsons/users.json")).Users;
+  return JSON.parse(open("../TestData/users.json")).Users;
 });
 
 export function createListingJourney() {
@@ -336,7 +336,9 @@ export function createListingJourney() {
     storageUrl = res.json().url;
     photoId = res.json().photoId;
     photoGuid = res.json().photoUuid;
-
+    console.log("photo id is :- "+ photoId)
+    console.log("storage url is :- " + storageUrl)
+    
     res = http.put(storageUrl, binaryFile, {
       headers: {
         "user-agent":

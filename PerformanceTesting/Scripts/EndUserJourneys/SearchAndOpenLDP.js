@@ -8,7 +8,7 @@ import ApplicationFlow from '../Common/ApplicationFlow.js';
 import Utilities from "../Common/Utilities.js";
 
 const listings = new SharedArray("listingList", function () {
-  return JSON.parse(open("../../Data/Jsons/listings.json")).Listings;
+  return JSON.parse(open("../TestData/listings.json")).Listings;
 });
 
 export function searchListingAndOpenLDPJourney() {
