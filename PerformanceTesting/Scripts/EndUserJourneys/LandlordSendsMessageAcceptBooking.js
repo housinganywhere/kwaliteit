@@ -1,6 +1,5 @@
-import { check } from "k6";
+import { check, group } from "k6";
 import http from "k6/http";
-import { group } from "k6";
 import { SharedArray } from "k6/data";
 import ApplicationFlow from "../Common/ApplicationFlow.js";
 import * as constants from "../Common/Constants.js";

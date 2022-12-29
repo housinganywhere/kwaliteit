@@ -11,6 +11,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/housinganywhere/kwaliteit/performance-testing/setup/src/pkg/config"
 	"github.com/housinganywhere/kwaliteit/performance-testing/setup/src/pkg/listings"
 	"github.com/housinganywhere/kwaliteit/performance-testing/setup/src/pkg/users"
 	"github.com/housinganywhere/kwaliteit/performance-testing/setup/src/pkg/utilities"
@@ -34,6 +35,7 @@ func GenerateListingsWithBookingRequest(count int, hostName string, exportFile s
 		}
 		wg.Add(it)
 		for i := 0; i < it; i++ {
+			fmt.Println("The listing id of listing # " + strconv.Itoa(i+1) + "is " + listingsList[i].Id)
 			listingId, _ := strconv.Atoi(listingsList[i].Id)
 			go func(i int) {
 				defer wg.Done()
@@ -76,19 +78,19 @@ func doSubscription(client *utilities.DataSeeder, tenantId int, tenantName strin
 
 	stripeBody := url.Values{}
 	stripeBody.Set("type", "card")
-	stripeBody.Set("card[number]", client.Config.StripeTestCardNumber)
-	stripeBody.Set("card[cvc]", client.Config.StripeTestCardCvc)
-	stripeBody.Set("card[exp_month]", client.Config.StripeTestCardExpiryMonth)
-	stripeBody.Set("card[exp_year]", client.Config.StripeTestCardExpiryYear)
-	stripeBody.Set("key", client.Config.StripeTestKey)
+	stripeBody.Set("card[number]", config.StripeTestCardNumber)
+	stripeBody.Set("card[cvc]", config.StripeTestCardCvc)
+	stripeBody.Set("card[exp_month]", config.StripeTestCardExpiryMonth)
+	stripeBody.Set("card[exp_year]", config.StripeTestCardExpiryYear)
+	stripeBody.Set("key", config.StripeTestKey)
 
 	headers := http.Header{}
 	headers.Add("content-type", "application/x-www-form-urlencoded")
-	headers.Add("Referer", client.Config.StripeJs+"/")
-	headers.Add("Origin", client.Config.StripeJs)
-	headers.Add("Host", client.Config.StripeApi)
+	headers.Add("Referer", config.StripeJs+"/")
+	headers.Add("Origin", config.StripeJs)
+	headers.Add("Host", config.StripeApi)
 	haHost := client.Host
-	client.Host = client.Config.StripeApi
+	client.Host = config.StripeApi
 
 	res := utilities.Post(client, "/v1/payment_methods", stripeBody, &headers, http.StatusOK)
 	stripePaymentMethodId := res["id"]
@@ -153,22 +155,22 @@ func sendBookingRequest(client *utilities.DataSeeder, listingId int, tenantId in
 
 	stripeBody := url.Values{}
 	stripeBody.Set("payment_method_data[type]", "card")
-	stripeBody.Set("payment_method_data[card][number]", client.Config.StripeTestCardNumber)
-	stripeBody.Set("payment_method_data[card][cvc]", client.Config.StripeTestCardCvc)
-	stripeBody.Set("payment_method_data[card][exp_month]", client.Config.StripeTestCardExpiryMonth)
-	stripeBody.Set("payment_method_data[card][exp_year]", client.Config.StripeTestCardExpiryYear)
+	stripeBody.Set("payment_method_data[card][number]", config.StripeTestCardNumber)
+	stripeBody.Set("payment_method_data[card][cvc]", config.StripeTestCardCvc)
+	stripeBody.Set("payment_method_data[card][exp_month]", config.StripeTestCardExpiryMonth)
+	stripeBody.Set("payment_method_data[card][exp_year]", config.StripeTestCardExpiryYear)
 	stripeBody.Set("expected_payment_method_type", "card")
 	stripeBody.Set("use_stripe_sdk", "true")
-	stripeBody.Set("key", client.Config.StripeTestKey)
+	stripeBody.Set("key", config.StripeTestKey)
 	stripeBody.Set("client_secret", stripeToken)
 
 	headers := http.Header{}
 	headers.Add("content-type", "application/x-www-form-urlencoded")
-	headers.Add("Referer", client.Config.StripeJs+"/")
-	headers.Add("Origin", client.Config.StripeJs)
-	headers.Add("Host", client.Config.StripeApi)
+	headers.Add("Referer", config.StripeJs+"/")
+	headers.Add("Origin", config.StripeJs)
+	headers.Add("Host", config.StripeApi)
 	haHost := client.Host
-	client.Host = client.Config.StripeApi
+	client.Host = config.StripeApi
 
 	res3 := utilities.Post(client, fmt.Sprintf("/v1/setup_intents/%s/confirm", stripeIntent), stripeBody, &headers, http.StatusOK)
 	payInToken := res3["payment_method"].(string)

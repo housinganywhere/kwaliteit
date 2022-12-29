@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/cookiejar"
+	"net/http/httputil"
 	"net/url"
 	"strings"
 )
@@ -16,7 +17,6 @@ type DataSeeder struct {
 	Host           string
 	ExportLocation string
 	HttpClient     *http.Client
-	Config         *config
 }
 
 func NewDataSeeder(host string, exportLocation string) DataSeeder {
@@ -30,20 +30,28 @@ func NewDataSeeder(host string, exportLocation string) DataSeeder {
 		HttpClient: &http.Client{
 			Jar: jar,
 		},
-		Config: loadConfiguration(),
 	}
 }
 
 func Get(client *DataSeeder, path string, expectedStatus int) map[string]interface{} {
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", client.Host, path), nil)
 	if err != nil {
+
 		log.Fatalf("error occurred while framing request for path:- %s. The error is:- %s", path, err.Error())
 	}
 	resp, err := client.HttpClient.Do(req)
 	if err != nil {
+		rq, _ := httputil.DumpRequest(req, true)
+		rs, _ := httputil.DumpResponse(resp, true)
+		fmt.Println("The request was :- " + string(rq))
+		fmt.Println("The response was :- " + string(rs))
 		log.Fatalf("The call to %s returned an error. The error is:- %s", path, err)
 	}
 	if resp.StatusCode != expectedStatus {
+		rq, _ := httputil.DumpRequest(req, true)
+		rs, _ := httputil.DumpResponse(resp, true)
+		fmt.Println("The request was :- " + string(rq))
+		fmt.Println("The response was :- " + string(rs))
 		log.Fatalf("The call to %s returned an incorrect status code. Expected code was %d but actual is %d", path, expectedStatus, resp.StatusCode)
 	}
 	var res map[string]interface{}
@@ -96,9 +104,19 @@ func makeUpdateCall(callMethod string, client *DataSeeder, path string, payload 
 	req.Header = *headers
 	res, err = client.HttpClient.Do(req)
 	if err != nil {
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(req.Body)
+		rs, _ := httputil.DumpResponse(res, true)
+		fmt.Println("The request was :- " + buf.String())
+		fmt.Println("The response was :- " + string(rs))
 		log.Fatalf("The call to %s%s returned an error. The error is:- %s", client.Host, path, err)
 	}
 	if res.StatusCode != expectedStatus {
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(formBody)
+		rs, _ := httputil.DumpResponse(res, true)
+		fmt.Println("The request was :- " + buf.String())
+		fmt.Println("The response was :- " + string(rs))
 		log.Fatalf("The call to %s%s returned an incorrect status code. Expected code was %d but actual is %d", client.Host, path, expectedStatus, res.StatusCode)
 
 	}
