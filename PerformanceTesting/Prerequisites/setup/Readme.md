@@ -21,12 +21,12 @@ go run ./ -dataCategory user -count 3 -host https://stage.housinganywhere.com -e
 Following is the significance of each of the parameters in the above command :-
 * -dataCategory :- Indicates what type of data to be created. In the above mentioned example `-dataCategory user` indicates that we need to create users
 The other dataCategories available are :-
-    *  listing :- creates a listing
-    *  BookingRequest :- creates a booking request
+    *  listing :- creates listings
+    *  bookingRequests :- creates  booking requests. For bookingRequest, one cannot specify the count of records more than 15. There is a limitation (rate limiting) on the stripe test mode which will not allow.
 * -count :- Indicates quantity of data to be created. In the above mentioned example `-count 3` indicates 3 users need to be created
 * -host :- Indicates against which environment data needs to be created. In the above example `-host https://stage.housinganywhere.com` indicates the data needs to be created against staging environment.
 If not specified, by default it executes against staging environment
-* -exportLocation :- Indicates at which location the json file of data needs to be stored. One can provide a relative path in here. In the above example `../../../Data/Jsons/Users.json` indicates the data needs to be stored inside /Data/Jsons/Users.json located at the root level of the PerformanceTesting folder
+* -exportLocation :- Indicates at which location the json file of data needs to be stored. One can provide a relative path in here. In the above example `../../../Scripts/TestData` indicates the data needs to be stored inside /Scripts/TestData located at the root level of the PerformanceTesting folder
 
 # Shape of the sample json data files created
 

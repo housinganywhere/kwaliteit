@@ -54,6 +54,7 @@ func GenerateListingsWithUniqueLL(count int, hostName string, exportFile string)
 	var streetList streets
 	json.Unmarshal(streetsDataBytesValue, &streetList)
 	streetCount := len(streetList.Streets)
+
 	listingsToExport := make([]*exportListing, count)
 
 	//go-routine batches -- each batch of 50
@@ -81,7 +82,7 @@ func GenerateListingsWithUniqueLL(count int, hostName string, exportFile string)
 				users.VerifyUser(&client, user.Uuid, strings.Split(fmt.Sprintf("%f", user.Id), ".")[0])
 				rand.Seed(time.Now().UnixNano())
 				streetIndex := rand.Intn(streetCount)
-				listingDetailsMap["address"] = streetList.Streets[streetIndex].Name + ", " + streetList.Streets[i].City
+				listingDetailsMap["address"] = streetList.Streets[streetIndex].Name + ", " + streetList.Streets[streetIndex].City
 				listingDetailsMap["street"] = streetList.Streets[streetIndex].Name
 				if err != nil {
 					log.Fatalf("Error occurred while marshaling listingDetailsMap into Json:- %s", err.Error())
