@@ -58,14 +58,15 @@ Following steps need to be followed for executing the k6 performance tests :-
 2. First generate the test data required to run the performance tests. The test data generator is written in Golang and can be found in /Prerequisites/setup folder. The details around how to setup golang can be found here 
     * cd /Prerequisites/setup/src in the terminal and run below three commands
 
-    * `go run ./ -dataCategory listing -count 1 -host https://stage.housinganywhere.com -exportLocation ../../../Data/Jsons/listings.json`
-    * `go run ./ -dataCategory user -count 1 -host https://stage.housinganywhere.com -exportLocation ../../../Data/Jsons/users.json`
-    * `go run ./ -dataCategory bookingRequest -count 1 -host https://stage.housinganywhere.com -exportLocation ../../../Data/Jsons/BookingRequests.json`<br><br>
+    * `go run ./ -dataCategory listing -count 1 -host https://stage.housinganywhere.com -exportLocation ../../../Scripts/TestData`
+    * `go run ./ -dataCategory user -count 1 -host https://stage.housinganywhere.com -exportLocation ../../../Scripts/TestData`
+    * `go run ./ -dataCategory bookingRequest -count 1 -host https://stage.housinganywhere.com -exportLocation ../../../Scripts/TestData`<br><br>
+    * It will setup required test data of the domains:- user, listing and bookingRequest against the stage environment. The important fields of the test data of each domain gets exported into Scripts/TestData folder and can be found inside the respective .json file.
     *Note:- Make sure to change the value of parameters `count` and `host` depending upon the number of records of each category of test data you want to generate and the environment against you want to run the tests respectively. For simply trying out k6 scripts the above mentioned values should be fine.
-
-2. Fire the command :-
+3. Navigate to the root directory, i.e. PerformanceTesting
+4. Fire the command :-
 ```
-k6 run --out json=results.json --env LOAD_TYPE=../../Data/Jsons/minLoad.config.json Scripts/EndUserJourneys/endUserJourney.js
+k6 run --out json=results.json --env LOAD_TYPE=Scripts/TestData/minLoad.config.json Scripts/EndUserJourneys/endUserJourney.js
 
 ```
 Lets see what each of the parameter here indicates:-
@@ -135,7 +136,8 @@ As the name suggests `minLoad.config.json` contains minimum load for each of the
      vus_max........................: 4      min=4      max=4
 
     ```
-
+    Some of the above metrics in the summary are self-explanatory. However, a short explanation around each metric can be found [here](https://k6.io/docs/using-k6/metrics/)
+    
     `Scripts/EndUserJourneys/endUserJourney.js` is the entry point file for executing the performance tests. This file basically contains the method(s) for each of the end user journeys
 
     # How can I emit the metrics to prometheus?
