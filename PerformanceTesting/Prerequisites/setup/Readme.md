@@ -9,20 +9,21 @@ Currently this setup can create following data :-
 # Pre-requisites
 
 It's a golang console program(main package). So, you need to have golang installed on your machine or wherever you are planning to execute it. One can follow [this](https://go.dev/doc/install) link to have it installed and setup the machine
+If you are a Windows user than you can install go from [here](https://go.dev/dl/). Find an appropriate installer for your machine, download the .msi and install it.
 
 # What command to run and where will the data get created?
 
 1. Navigate to the /Prerequisites/setup/src folder
 2. Run following command
 ```
-go run ./ -dataCategory user -count 3 -host https://stage.housinganywhere.com -exportLocation ../../../Data/Jsons/Users.json
+go run ./ -dataCategory user -count 3 -host https://stage.housinganywhere.com -exportLocation ../../../Scripts/TestData
 
 ```
 Following is the significance of each of the parameters in the above command :-
 * -dataCategory :- Indicates what type of data to be created. In the above mentioned example `-dataCategory user` indicates that we need to create users
 The other dataCategories available are :-
     *  listing :- creates listings
-    *  bookingRequests :- creates  booking requests. For bookingRequest, one cannot specify the count of records more than 15. There is a limitation (rate limiting) on the stripe test mode which will not allow.
+    *  bookingRequest :- creates  booking requests. For bookingRequest, one cannot specify the count of records more than 15. There is a limitation (rate limiting) on the stripe test mode which will not allow.
 * -count :- Indicates quantity of data to be created. In the above mentioned example `-count 3` indicates 3 users need to be created
 * -host :- Indicates against which environment data needs to be created. In the above example `-host https://stage.housinganywhere.com` indicates the data needs to be created against staging environment.
 If not specified, by default it executes against staging environment
